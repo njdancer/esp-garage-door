@@ -44,6 +44,8 @@ homekit_value_t homekit_get_current_state();
 homekit_value_t homekit_get_obstruction();
 void homekit_identify(homekit_value_t _value);
 
+ETSTimer update_timer;
+
 homekit_accessory_t *accessories[] = {
     HOMEKIT_ACCESSORY(
             .id = 1,
@@ -112,8 +114,6 @@ const char *sensor_state_description(sensor_state_t state)
 
 const char *sensor_description(uint8_t gpio)
 {
-    // TODO: remove
-    printf("Describing GPIO %d\n", gpio);
     const char *description = "unknown";
     switch (gpio)
     {
@@ -188,6 +188,16 @@ void current_state_set(uint8_t new_state)
     {
         current_door_state = new_state;
         homekit_notify_state();
+
+        if (new_state == HOMEKIT_CHARACTERISTIC_CURRENT_DOOR_STATE_OPENING ||
+            new_state == HOMEKIT_CHARACTERISTIC_CURRENT_DOOR_STATE_CLOSING)
+        {
+            // Wait for the garage door to open / close,
+            // then fire timer to update sensors:
+            sdk_os_timer_arm(&update_timer, OPEN_CLOSE_DURATION, false);
+        } else {
+            sdk_os_timer_disarm(&update_timer);
+        }
     }
 }
 // #endregion
@@ -197,7 +207,7 @@ bool relay_on = false;
 
 void relay_write(bool on)
 {
-    gpio_write(RELAY_PIN, on);
+    gpio_write(RELAY_PIN, !on);
 }
 
 homekit_value_t relay_on_get()
@@ -219,14 +229,20 @@ void relay_on_set(homekit_value_t value)
 
 void relay_init()
 {
-    gpio_enable(RELAY_PIN, GPIO_OUTPUT);
     relay_write(relay_on);
+    gpio_enable(RELAY_PIN, GPIO_OUTPUT);
 }
 // #endregion
 
 // #region sensor
 bool top_sensor_state;
 bool bottom_sensor_state;
+
+void update_sensor_state()
+{
+    bottom_sensor_state = gpio_read(BOTTOM_PIN);
+    top_sensor_state = gpio_read(TOP_PIN);
+}
 
 void update_current_state_from_sensor_state()
 {
@@ -254,7 +270,7 @@ void update_current_state_from_sensor_state()
         }
     }
 
-    printf("Door appears to be %s\n", sensor_state_description(door_state));
+    printf("Door appears to be %s\n", sensor_state_description(door_state), door_state);
 
     if (door_state == DOOR_UNKNOWN)
     {
@@ -362,6 +378,7 @@ void update_current_state_from_sensor_state()
 static void on_sensor_change(bool high, void *context)
 {
     printf("%s sensor went %s\n", sensor_description(*((uint8_t *)context)), high ? "high" : "low");
+    update_sensor_state();
     update_current_state_from_sensor_state();
 }
 
@@ -388,12 +405,14 @@ static void sensor_init()
     {
         printf("Failed to initialize top sensor\n");
     }
+
+    update_sensor_state();
+    update_current_state_from_sensor_state();
 }
 
 // #endregion
 
 // #region timer
-ETSTimer update_timer;
 
 static void on_timer(void *arg)
 {
@@ -429,7 +448,7 @@ void identify_task(void *_args)
 void homekit_identify(homekit_value_t _value)
 {
     printf("GDO identify\n");
-    xTaskCreate(identify_task, "GDO identify", 128, NULL, 2, NULL);
+    // xTaskCreate(identify_task, "GDO identify", 128, NULL, 2, NULL);
 }
 
 homekit_value_t homekit_get_obstruction()
@@ -475,15 +494,11 @@ void homekit_set_target_state(homekit_value_t new_value)
     vTaskDelay(RELAY_HOLD_DURATION / portTICK_PERIOD_MS);
     // Turn OFF GPIO:
     relay_write(false);
-
-    // Wait for the garage door to open / close,
-    // then update current_door_state from sensor:
-    sdk_os_timer_arm(&update_timer, OPEN_CLOSE_DURATION, false);
 }
 
 homekit_server_config_t config = {
     .accessories = accessories,
-    .password = "111-11-111"};
+    .password = "123-45-678"};
 
 void on_wifi_ready()
 {
