@@ -1,0 +1,42 @@
+{
+  "configurations": [
+    {
+      "name": "ESP8266",
+      "includePath": [
+        "${workspaceFolder}/../esp-open-sdk/lx106-hal/include",
+        "${workspaceFolder}/.",
+        "${workspaceFolder}/include",
+        "${workspaceFolder}/esp-open-rtos/include",
+        "${workspaceFolder}/esp-open-rtos/libc/xtensa-lx106-elf/include",
+        "${workspaceFolder}/esp-open-rtos/extras/http-parser/",
+        "${workspaceFolder}/esp-open-rtos/extras/dhcpserver/include",
+        "${workspaceFolder}/components/wifi-config//include",
+        "${workspaceFolder}/components/cJSON//cJSON",
+        "${workspaceFolder}/components/wolfssl/",
+        "${workspaceFolder}/components/wolfssl/wolfssl-4.1.0",
+        "${workspaceFolder}/components/homekit//include",
+        "${workspaceFolder}/components/esp-button/",
+        "${workspaceFolder}/esp-open-rtos/FreeRTOS/Source/include",
+        "${workspaceFolder}/esp-open-rtos/FreeRTOS/Source/portable/esp8266",
+        "${workspaceFolder}/esp-open-rtos/lwip/lwip/src/include",
+        "${workspaceFolder}/esp-open-rtos/lwip/include",
+        "${workspaceFolder}/esp-open-rtos/lwip/include",
+        "${workspaceFolder}/esp-open-rtos/lwip/lwip/src/include/compat/posix",
+        "${workspaceFolder}/esp-open-rtos/lwip/lwip/src/include/ipv4",
+        "${workspaceFolder}/esp-open-rtos/lwip/lwip/src/include/ipv4/lwip",
+        "${workspaceFolder}/esp-open-rtos/lwip/lwip/src/include/lwip",
+        "${workspaceFolder}/esp-open-rtos/core/include",
+        "${workspaceFolder}/esp-open-rtos/open_esplibs/include"
+      ],
+      "defines": ["BOTTOM_PIN=1", "TOP_PIN=2", "RELAY_PIN=3"],
+      "macFrameworkPath": [
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks"
+      ],
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "clang-x64"
+    }
+  ],
+  "version": 4
+}
