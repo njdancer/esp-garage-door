@@ -1,5 +1,22 @@
 {
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
-  "git.autoRepositoryDetection": false
+  "git.autoRepositoryDetection": false,
+  "files.associations": {
+    "*.gqlconfig": "json5",
+    "*.prettierrc": "json",
+    "state_machine.h": "c",
+    "homekit.h": "c",
+    "characteristics.h": "c",
+    "system_error": "c",
+    "freertos.h": "c",
+    "transitions.h": "c",
+    "accessory.h": "c",
+    "esp_wifi.h": "c",
+    "esp_system.h": "c",
+    "__tuple": "c",
+    "array": "c",
+    "door.h": "c",
+    "machine.h": "c"
+  }
 }
