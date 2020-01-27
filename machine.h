@@ -6,7 +6,8 @@
 #include "machine.event.h"
 #include "machine.state.h"
 
-typedef machine_state_t (*machine_transition_fn)(machine_state_t prev_state);
+typedef machine_state_t (*machine_transition_fn)(machine_state_t current_state,
+                                                 machine_event_t event);
 typedef void (*machine_callback_fn)(machine_state_t new_state);
 
 void machine_init(

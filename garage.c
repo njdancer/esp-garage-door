@@ -8,7 +8,6 @@
 #include "machine.h"
 #include "timed_latch.h"
 
-#define OPEN_CLOSE_DURATION 23000
 #define RELAY_HOLD_DURATION 100
 
 static const accessory_config_t g_accessory_config = {
@@ -18,42 +17,9 @@ static const accessory_config_t g_accessory_config = {
     .serial_number = "1",
     .version = "2.1",
     .password = "123-45-678",
+    .movement_timeout = 23000,
+    .reverse_delay = 2000,
 };
-
-// ETSTimer update_timer;
-
-// void current_state_set(uint8_t new_state) {
-//   printf("Setting current state to %s\n",
-//   current_state_description(new_state)); if (current_door_state != new_state)
-//   {
-//     current_door_state = new_state;
-//     homekit_notify_state();
-
-//     if (new_state == HOMEKIT_CHARACTERISTIC_CURRENT_DOOR_STATE_OPENING ||
-//         new_state == HOMEKIT_CHARACTERISTIC_CURRENT_DOOR_STATE_CLOSING) {
-//       // Wait for the garage door to open / close,
-//       // then fire timer to update sensors:
-//       sdk_os_timer_arm(&update_timer, OPEN_CLOSE_DURATION, false);
-//     } else {
-//       sdk_os_timer_disarm(&update_timer);
-//     }
-//   }
-// }
-// #endregion
-
-// #region timer
-
-// static void on_timer(void *arg) {
-//   printf("Timer fired. Updating state from sensors.\n");
-//   sdk_os_timer_disarm(&update_timer);
-//   update_current_state_from_sensor_state();
-// }
-
-// static void timer_init() {
-//   sdk_os_timer_disarm(&update_timer);
-//   sdk_os_timer_setfn(&update_timer, on_timer, NULL);
-// }
-// #endregion
 
 static void handle_door_state_changed(door_state_t new_state) {
   const machine_state_t door_state_map[] = {

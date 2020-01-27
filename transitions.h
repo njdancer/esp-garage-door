@@ -9,6 +9,6 @@ extern const machine_transition_fn
 const char *machine_state_description(machine_state_t machine_state);
 const char *machine_event_description(machine_event_t machine_event);
 
-void transition_init(uint16_t movement_timeout);
+void transition_init(uint16_t movement_timeout, uint16_t reverse_delay);
 
 #endif /* TRANSITIONS_H */

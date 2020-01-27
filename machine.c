@@ -24,7 +24,7 @@ void machine_handle_event(machine_event_t event) {
       gp_state_transition_matrix[g_current_state][event];
 
   if (transitioner != NULL) {
-    g_current_state = transitioner(g_current_state);
+    g_current_state = transitioner(g_current_state, event);
 
     if (g_on_transition != NULL) {
       g_on_transition(g_current_state);

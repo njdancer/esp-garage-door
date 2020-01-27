@@ -129,6 +129,7 @@ void accessory_init(const accessory_config_t *config,
   //          mac_addr[0], mac_addr[1], mac_addr[2], mac_addr[3], mac_addr[4],
   //          mac_addr[5]);
 
+  transition_init(config->movement_timeout, config->reverse_delay);
   machine_init(g_state_transition_matrix, initial_state,
                accessory_handle_transition);
 

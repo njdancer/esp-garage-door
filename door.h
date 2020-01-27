@@ -4,10 +4,10 @@
 #include <FreeRTOS.h>
 
 typedef enum {
-  DOOR_OPEN = 0,
-  DOOR_MOVING = 1,
-  DOOR_CLOSED = 2,
-  DOOR_UNKNOWN = 3,
+  DOOR_OPEN = 2,
+  DOOR_MOVING,
+  DOOR_CLOSED,
+  DOOR_UNKNOWN,
 } door_state_t;
 
 typedef void (*door_callback_fn)(door_state_t new_state);
