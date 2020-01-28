@@ -48,16 +48,9 @@ static void accessory_set_target_state(homekit_value_t new_value) {
     return;
   }
 
-  machine_state_t current_state = machine_current_state();
-
-  if (current_state == new_value.int_value) {
-    printf("accessory_set_target_state() ignored: target state == current "
-           "state (%s)\n",
-           machine_state_description(current_state));
-    return;
-  }
-
-  timed_latch_trigger();
+  // TODO: Handle unknown - need a better solution for MACHINE_STATE_UNKNOWN ==
+  // 255 with sparse arrays
+  machine_handle_event(new_value.uint8_value);
 }
 
 static void accessory_identify() {
@@ -136,7 +129,7 @@ void accessory_init(const accessory_config_t *config,
   g_accessory_config.password = config->password;
   homekit_accessory_t *accessory = g_accessory_config.accessories[0];
   homekit_service_t *information_service = accessory->services[0];
-  homekit_service_t *garage_door_service = accessory->services[0];
+  homekit_service_t *garage_door_service = accessory->services[1];
 
   information_service->characteristics[0]->value = HOMEKIT_STRING(config->name);
   information_service->characteristics[1]->value =

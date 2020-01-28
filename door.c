@@ -91,13 +91,15 @@ static void sensor_init(uint8_t *p_sensor_gpio) {
 }
 
 void door_init(uint8_t bottom_sensor_gpio, uint8_t top_sensor_gpio,
-               door_callback_fn g_on_door_state_changed) {
+               door_callback_fn on_door_state_changed) {
   // These should not be set prior to init and init should fail if run more than
   // once
-  assert(g_bottom_sensor_gpio == 0 && g_top_sensor_gpio == 0);
+  assert(g_bottom_sensor_gpio == 0 && g_top_sensor_gpio == 0 &&
+         g_on_door_state_changed == 0);
 
   g_bottom_sensor_gpio = bottom_sensor_gpio;
   g_top_sensor_gpio = top_sensor_gpio;
+  g_on_door_state_changed = on_door_state_changed;
 
   sensor_init(&g_bottom_sensor_gpio);
   sensor_init(&g_top_sensor_gpio);

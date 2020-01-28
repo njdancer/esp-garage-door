@@ -2,6 +2,7 @@
 
 #include <esplibs/libmain.h>
 #include <etstimer.h>
+#include <stdio.h>
 
 #include "timed_latch.h"
 
@@ -52,8 +53,7 @@ static void transition_disarm_movement_timer() {
 }
 
 static void transition_handle_movement_timer() {
-  // TODO: Log wording
-  printf("Timer fired. Updating state from sensors.\n");
+  printf("Movement timer fired.\n");
   transition_disarm_movement_timer();
   machine_handle_event(MACHINE_TIMEOUT_MOVEMENT);
 }
@@ -67,8 +67,7 @@ static void transition_disarm_reverse_timer() {
 }
 
 static void transition_handle_reverse_timer() {
-  // TODO: Log wording
-  printf("Timer fired. Updating state from sensors.\n");
+  printf("Reverse timer fired.\n");
   transition_disarm_movement_timer();
   machine_handle_event(MACHINE_TIMEOUT_REVERSE);
 }
@@ -116,6 +115,7 @@ static machine_state_t transition_toggle_door(machine_state_t current_state,
 static machine_state_t transition_stop_door(machine_state_t current_state,
                                             machine_event_t event) {
   timed_latch_trigger();
+  transition_disarm_movement_timer();
 
   switch (current_state) {
   case MACHINE_STATE_OPENING:
@@ -125,8 +125,8 @@ static machine_state_t transition_stop_door(machine_state_t current_state,
     g_reverse_state = MACHINE_STATE_OPENING;
     break;
   default:
-    // TODO: Log error - unhandled state
     g_reverse_state = MACHINE_STATE_UNKNOWN;
+    printf("Door state unknown while reversing\n");
     return MACHINE_STATE_UNKNOWN;
   }
 
